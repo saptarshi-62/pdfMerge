@@ -5,7 +5,7 @@ const multer = require("multer");
 const { mergePdf, mergeCustomPages } = require("./testpdf");
 const parsePages = require("./parsePages");
 const fs = require("fs");
-const upload = multer({ dest: "uploads/" });
+const upload = multer({ dest: "tmp/" });
 app.use("/static", express.static("public"));
 //app.use( express.static('public'));
 
