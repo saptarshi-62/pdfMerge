@@ -4,16 +4,16 @@ const PDFMerger = require('pdf-merger-js').default;
 //var merger = new PDFMerger();
 
 
-const mergePdf = async (p1,p2) => {
+const mergePdf = async (pdf1,pdf2) => {
   const merger = new PDFMerger();
-  await merger.add(p1);  //merge all pages. parameter is the path to file and filename.
-  await merger.add(p2); // merge only page 2
+  await merger.add(pdf1);  //merge all pages. parameter is the path to file and filename.
+  await merger.add(pdf2); // merge only page 2
   /*let d = new Date().getTime();
   await merger.save(`public/${d}.pdf`); //save under given name and reset the internal document
 
   return d;*/
-  const buffer = await merger.saveAsBuffer();
-  return buffer;
+  //const b = await merger.saveAsBuffer();
+  return await merger.saveAsBuffer();
   
   // Export the merged PDF as a nodejs Buffer
   // const mergedPdfBuffer = await merger.saveAsBuffer();

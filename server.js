@@ -5,7 +5,10 @@ const multer = require("multer");
 const { mergePdf, mergeCustomPages } = require("./testpdf");
 const parsePages = require("./parsePages");
 const fs = require("fs");
-const upload = multer({ dest: "tmp/" });
+const upload = multer({ dest: "/tmp" });
+/*app.use(express.urlencoded({ extended: true }));
+app.use(express.json());*/
+
 app.use("/static", express.static("public"));
 //app.use( express.static('public'));
 
@@ -28,8 +31,8 @@ app.post(
   async (req, res, next) => {
     console.log(req.files);
     let d = await mergePdf(
-      path.join(__dirname, req.files.pdf1[0].path),
-      path.join(__dirname, req.files.pdf2[0].path)
+      req.files.pdf1[0].path,
+      req.files.pdf2[0].path
     );
     fs.unlinkSync(req.files.pdf1[0].path);
     fs.unlinkSync(req.files.pdf2[0].path);
@@ -73,7 +76,8 @@ app.post(
 
 /*app.listen(port, () => {
   console.log(`Example app listening on port http://localhost:${port}`);
-});*/
+});
+*/
 
 if (require.main === module) {
   const port = process.env.PORT || 3000;
