@@ -1,0 +1,86 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  min-height: 100vh;
+}
+
+/* Navbar */
+.navbar {
+  background: linear-gradient(90deg, #ff758c, #ff7eb3) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.navbar-brand,
+.nav-link {
+  color: #fff !important;
+  font-weight: 600;
+}
+
+/* Card */
+form {
+  background: #fff;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+  margin-top: 60px;
+}
+
+/* Heading */
+form h1 {
+  text-align: center;
+  color: #5f27cd;
+  font-weight: 700;
+}
+
+/* File input */
+.form-control-file {
+  border: 2px dashed #a29bfe;
+  padding: 20px;
+  width: 100%;
+  border-radius: 12px;
+  background: #f8f9ff;
+}
+
+/* Button */
+.btn-primary {
+  background: linear-gradient(90deg, #00c6ff, #0072ff);
+  border: none;
+  width: 100%;
+  padding: 12px;
+  font-size: 18px;
+  border-radius: 50px;
+}
+
+.footer {
+  background: #f8f9fa;
+  color: #555;
+  border-top: 1px solid #ddd;
+  font-size: 0.95rem;
+}
+
+.footer strong {
+  color: #5f27cd;
+}
+
+.footer a {
+  color: #5f27cd;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.footer {
+  margin-top: auto;
+}
+
+
