@@ -1,6 +1,15 @@
 const express = require("express");
 const path = require("path");
 const app = express();
+
+// Global handlers to ensure Vercel captures errors in logs
+process.on('unhandledRejection', (reason) => {
+  console.error('unhandledRejection:', reason);
+});
+process.on('uncaughtException', (err) => {
+  console.error('uncaughtException:', err);
+});
+
 const multer = require("multer");
 const { mergePdf, mergeCustomPages } = require("./testpdf");
 const parsePages = require("./parsePages");
@@ -39,11 +48,15 @@ app.post(
       const pdf1Path = req.files.pdf1[0].path;
       const pdf2Path = req.files.pdf2[0].path;
 
+      const s1 = fs.existsSync(pdf1Path) ? fs.statSync(pdf1Path).size : 0;
+      const s2 = fs.existsSync(pdf2Path) ? fs.statSync(pdf2Path).size : 0;
+      console.log(`Merging files: ${pdf1Path} (${s1} bytes), ${pdf2Path} (${s2} bytes)`);
+
       const d = await mergePdf(pdf1Path, pdf2Path);
 
       // cleanup files if they exist
-      try { fs.unlinkSync(pdf1Path); } catch (e) {}
-      try { fs.unlinkSync(pdf2Path); } catch (e) {}
+      try { fs.unlinkSync(pdf1Path); } catch (e) { console.warn('unlink pdf1 failed', e); }
+      try { fs.unlinkSync(pdf2Path); } catch (e) { console.warn('unlink pdf2 failed', e); }
 
       res.setHeader("Content-Type", "application/pdf");
       res.setHeader("Content-Disposition", "attachment; filename=merged.pdf");
@@ -79,10 +92,14 @@ app.post(
       const pdf1Path = req.files.pdf1[0].path;
       const pdf2Path = req.files.pdf2[0].path;
 
+      const s1 = fs.existsSync(pdf1Path) ? fs.statSync(pdf1Path).size : 0;
+      const s2 = fs.existsSync(pdf2Path) ? fs.statSync(pdf2Path).size : 0;
+      console.log(`Custom merge files: ${pdf1Path} (${s1} bytes), ${pdf2Path} (${s2} bytes), pages1=${pages1.join(',')}, pages2=${pages2.join(',')}`);
+
       const d = await mergeCustomPages(pdf1Path, pages1, pdf2Path, pages2);
 
-      try { fs.unlinkSync(pdf1Path); } catch (e) {}
-      try { fs.unlinkSync(pdf2Path); } catch (e) {}
+      try { fs.unlinkSync(pdf1Path); } catch (e) { console.warn('unlink pdf1 failed', e); }
+      try { fs.unlinkSync(pdf2Path); } catch (e) { console.warn('unlink pdf2 failed', e); }
 
       res.setHeader("Content-Type", "application/pdf");
       res.setHeader("Content-Disposition", "attachment; filename=merged.pdf");
