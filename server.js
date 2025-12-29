@@ -75,4 +75,12 @@ app.post(
   console.log(`Example app listening on port http://localhost:${port}`);
 });*/
 
+if (require.main === module) {
+  const port = process.env.PORT || 3000;
+  app.listen(port, () => {
+    console.log(`Server running on http://localhost:${port}`);
+  });
+}
+
 module.exports = app;
+
