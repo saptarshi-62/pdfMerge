@@ -5,9 +5,11 @@ const multer = require("multer");
 const { mergePdf, mergeCustomPages } = require("./testpdf");
 const parsePages = require("./parsePages");
 const fs = require("fs");
-const upload = multer({ dest: "/tmp" });
-/*app.use(express.urlencoded({ extended: true }));
-app.use(express.json());*/
+const os = require('os');
+const upload = multer({ dest: os.tmpdir() });
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 app.use("/static", express.static("public"));
 //app.use( express.static('public'));
@@ -29,48 +31,68 @@ app.post(
     { name: "pdf2", maxCount: 1 },
   ]),
   async (req, res, next) => {
-    console.log(req.files);
-    let d = await mergePdf(
-      req.files.pdf1[0].path,
-      req.files.pdf2[0].path
-    );
-    fs.unlinkSync(req.files.pdf1[0].path);
-    fs.unlinkSync(req.files.pdf2[0].path);
-    //res.redirect(`http://localhost:3000/static/${d}.pdf`);
-    res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Disposition", "attachment; filename=merged.pdf");
-    res.setHeader("Content-Length", d.length);
+    try {
+      console.log(req.files);
+      if (!req.files || !req.files.pdf1 || !req.files.pdf2) {
+        return res.status(400).send("Both pdf1 and pdf2 files are required");
+      }
+      const pdf1Path = req.files.pdf1[0].path;
+      const pdf2Path = req.files.pdf2[0].path;
 
-    res.end(d);
+      const d = await mergePdf(pdf1Path, pdf2Path);
 
-    // req.files is array of `photos` files
-    // req.body will contain the text fields, if there were any
+      // cleanup files if they exist
+      try { fs.unlinkSync(pdf1Path); } catch (e) {}
+      try { fs.unlinkSync(pdf2Path); } catch (e) {}
+
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader("Content-Disposition", "attachment; filename=merged.pdf");
+      res.setHeader("Content-Length", d.length);
+      res.end(d);
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Internal Server Error");
+    }
   }
 );
 
 app.post(
   "/custom-merge",
-  upload.fields([{ name: "pdf1" }, { name: "pdf2" }]),
+  upload.fields([{ name: "pdf1", maxCount:1 }, { name: "pdf2", maxCount:1 }]),
   async (req, res) => {
-    const pages1 = parsePages(req.body.pages1);
-    const pages2 = parsePages(req.body.pages2);
+    try {
+      if (!req.files || !req.files.pdf1 || !req.files.pdf2) {
+        return res.status(400).send("Both pdf1 and pdf2 files are required");
+      }
+      if (!req.body.pages1 || !req.body.pages2) {
+        return res.status(400).send("pages1 and pages2 fields are required");
+      }
 
-    const d = await mergeCustomPages(
-      req.files.pdf1[0].path,
-      pages1,
-      req.files.pdf2[0].path,
-      pages2
-    );
+      const pages1 = parsePages(req.body.pages1);
+      const pages2 = parsePages(req.body.pages2);
 
-    fs.unlinkSync(req.files.pdf1[0].path);
-    fs.unlinkSync(req.files.pdf2[0].path);
+      if (!Array.isArray(pages1) || pages1.length === 0 || pages1.some(isNaN) ||
+          !Array.isArray(pages2) || pages2.length === 0 || pages2.some(isNaN)) {
+        return res.status(400).send("Invalid pages format. Example: 1,2,3-5");
+      }
 
-    //res.redirect(`http://localhost:3000/static/${d}.pdf`);
-    res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Disposition", "attachment; filename=merged.pdf");
-    res.setHeader("Content-Length", d.length);
+      const pdf1Path = req.files.pdf1[0].path;
+      const pdf2Path = req.files.pdf2[0].path;
 
-    res.end(d);
+      const d = await mergeCustomPages(pdf1Path, pages1, pdf2Path, pages2);
+
+      try { fs.unlinkSync(pdf1Path); } catch (e) {}
+      try { fs.unlinkSync(pdf2Path); } catch (e) {}
+
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader("Content-Disposition", "attachment; filename=merged.pdf");
+      res.setHeader("Content-Length", d.length);
+
+      res.end(d);
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Internal Server Error");
+    }
   }
 );
 
@@ -85,6 +107,12 @@ if (require.main === module) {
     console.log(`Server running on http://localhost:${port}`);
   });
 }
+
+// Generic error handler to avoid crashing the serverless function
+app.use((err, req, res, next) => {
+  console.error('Unhandled error:', err);
+  res.status(err && err.status ? err.status : 500).send('Internal Server Error');
+});
 
 module.exports = app;
 
