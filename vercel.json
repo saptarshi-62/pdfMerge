@@ -1,6 +1,9 @@
 {
   "version": 2,
-  "routes": [{ "src": "^/(.*)$", "dest": "/api/server.js" }],
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "^/(.*)$", "dest": "/api/server.js" }
+  ],
   "functions": {
     "api/server.js": { "maxDuration": 60 }
   }
