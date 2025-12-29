@@ -3,7 +3,7 @@ const path = require("path");
 const app = express();
 const multer = require("multer");
 const { mergePdf, mergeCustomPages } = require("./testpdf");
-const parsePages = require('./parsePages');
+const parsePages = require("./parsePages");
 const fs = require("fs");
 const upload = multer({ dest: "uploads/" });
 app.use("/static", express.static("public"));
@@ -15,31 +15,35 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "/templates/index.html"));
 });
 
-app.get("/about", (req, res)=> {
+app.get("/about", (req, res) => {
   res.sendFile(path.join(__dirname, "/templates/about.html"));
 });
 
-app.post("/merge", upload.fields([
-  { name: "pdf1", maxCount: 1 },
-  { name: "pdf2", maxCount: 1 }
-]), async (req, res, next) => {
-  console.log(req.files);
-  let d = await mergePdf(
-    path.join(__dirname, req.files.pdf1[0].path),
-    path.join(__dirname, req.files.pdf2[0].path)
-  );
-  fs.unlinkSync(req.files.pdf1[0].path);
-  fs.unlinkSync(req.files.pdf2[0].path);
-  //res.redirect(`http://localhost:3000/static/${d}.pdf`);
-  res.set({
-    "Content-Type": "application/pdf",
-    "Content-Disposition": "attachment; filename=merged.pdf"
-  });
+app.post(
+  "/merge",
+  upload.fields([
+    { name: "pdf1", maxCount: 1 },
+    { name: "pdf2", maxCount: 1 },
+  ]),
+  async (req, res, next) => {
+    console.log(req.files);
+    let d = await mergePdf(
+      path.join(__dirname, req.files.pdf1[0].path),
+      path.join(__dirname, req.files.pdf2[0].path)
+    );
+    fs.unlinkSync(req.files.pdf1[0].path);
+    fs.unlinkSync(req.files.pdf2[0].path);
+    //res.redirect(`http://localhost:3000/static/${d}.pdf`);
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", "attachment; filename=merged.pdf");
+    res.setHeader("Content-Length", d.length);
 
-  res.send(d);
-  // req.files is array of `photos` files
-  // req.body will contain the text fields, if there were any
-});
+    res.end(d);
+
+    // req.files is array of `photos` files
+    // req.body will contain the text fields, if there were any
+  }
+);
 
 app.post(
   "/custom-merge",
@@ -59,14 +63,16 @@ app.post(
     fs.unlinkSync(req.files.pdf2[0].path);
 
     //res.redirect(`http://localhost:3000/static/${d}.pdf`);
-    res.set({
-    "Content-Type": "application/pdf",
-    "Content-Disposition": "attachment; filename=merged.pdf"
-  });
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", "attachment; filename=merged.pdf");
+    res.setHeader("Content-Length", d.length);
 
-  res.send(d);
-  });
+    res.end(d);
+  }
+);
 
-app.listen(port, () => {
+/*app.listen(port, () => {
   console.log(`Example app listening on port http://localhost:${port}`);
-});
+});*/
+
+module.exports = app;
