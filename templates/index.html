@@ -71,10 +71,11 @@
         </ul>
       </div>
     </nav>
+    <div id="alerts" class="container mt-3"></div>
     <div class="container my-3">
       <!-- Simple Merge Section -->
       <div id="simple-merge">
-        <form method="POST" action="/merge" enctype="multipart/form-data">
+        <form id="merge-form" method="POST" action="/merge" enctype="multipart/form-data">
           <h1>Your PDF Merger Tool</h1>
           <div class="form-group">
             <label>
@@ -99,7 +100,7 @@
       </div>
       <!-- Custom Merge Section -->
       <div id="custom-merge" style="display: none">
-        <form
+        <form id="custom-merge-form"
           method="POST"
           action="/custom-merge"
           enctype="multipart/form-data"
