@@ -17,10 +17,15 @@ const fs = require("fs");
 const os = require('os');
 const upload = multer({ dest: os.tmpdir() });
 
-// Log basic request info (method, path, content-length) to help diagnose runtime failures on Vercel
+// Log basic request info (method, path, content-length) and response status/time to help diagnose runtime failures on Vercel
 app.use((req, res, next) => {
+  const start = Date.now();
   try {
-    console.log(`REQ ${req.method} ${req.url} content-length=${req.headers['content-length'] || 'unknown'}`);
+    const reqLen = req.headers['content-length'] || 'unknown';
+    res.on('finish', () => {
+      const duration = Date.now() - start;
+      console.log(`REQ ${req.method} ${req.url} ${res.statusCode} content-length=${reqLen} time=${duration}ms`);
+    });
   } catch (e) {
     console.warn('Logging middleware error', e);
   }
@@ -31,10 +36,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use("/static", express.static("public"));
+app.use(express.static("public"));
 
 // Simple health endpoint for deployment checks
 app.get('/health', (req, res) => res.status(200).send('ok'));
-//app.use( express.static('public'));
 
 const port = 3000;
 

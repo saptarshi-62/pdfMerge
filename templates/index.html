@@ -15,7 +15,7 @@
       integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N"
       crossorigin="anonymous"
     />
-    <link rel="stylesheet" href="/static/style.css" />
+    <link rel="stylesheet" href="/style.css" />
 
     <title>pdfMerge</title>
   </head>
@@ -77,9 +77,9 @@
         <form method="POST" action="/merge" enctype="multipart/form-data">
           <h1>Your PDF Merger Tool</h1>
           <div class="form-group">
-            <label for="exampleFormControlFile1"
-              >Select the pdf files to be merged</label
-            >
+            <label>
+              Select the pdf files to be merged
+            </label>
             <!--<input
               type="file"
               name="pdfs"
@@ -146,17 +146,6 @@
     </div>
     <!-- Optional JavaScript; choose one of the two! -->
 
-    <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
-    <script
-      src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
-      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
-      crossorigin="anonymous"
-    ></script>
 
     <!-- Option 2: Separate Popper and Bootstrap JS -->
     <!--
@@ -174,5 +163,7 @@
     </div>
   </footer>
 
-  <script src="/static/script.js"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/script.js"></script>
 </html>
