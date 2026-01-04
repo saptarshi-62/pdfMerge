@@ -139,6 +139,12 @@
             <input type="text" name="pages2" class="form-control" required />
           </div>
 
+          <div class="form-group">
+            <label>Global Order (optional) — format: <code>pdf1:1,pdf2:3,pdf1:2</code></label>
+            <input type="text" name="order" class="form-control" placeholder="pdf1:1,pdf2:3,pdf1:2" />
+            <small class="form-text text-muted">If provided, this sequence will be used to build the merged PDF and the <code>pages1</code>/<code>pages2</code> inputs will be ignored.</small>
+          </div>
+
           <button type="submit" class="btn btn-primary mt-3">
             Merge Selected Pages
           </button>

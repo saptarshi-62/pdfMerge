@@ -45,4 +45,29 @@ const mergeCustomPages = async (pdf1, pages1, pdf2, pages2) => {
   }
 };
 
-module.exports = { mergePdf, mergeCustomPages };
+const mergeByOrder = async (pdf1, pdf2, orderItems) => {
+  // orderItems: [{ which: 1|2, page: number }, ...]
+  try {
+    const PDFMerger = await getPDFMergerClass();
+    const merger = new PDFMerger();
+
+    console.log('mergeByOrder: starting with orderItems=', JSON.stringify(orderItems));
+
+    for (const [idx, item] of orderItems.entries()) {
+      const { which, page } = item;
+      console.log(`mergeByOrder: adding item ${idx}: which=${which}, page=${page}`);
+      if (!Number.isInteger(page) || page <= 0) throw new Error('Invalid page number in order item: ' + JSON.stringify(item));
+      if (which === 1) await merger.add(pdf1, page);
+      else if (which === 2) await merger.add(pdf2, page);
+      else throw new Error('Invalid which in order item: ' + JSON.stringify(item));
+    }
+
+    console.log('mergeByOrder: finished adding pages, saving buffer');
+    return await merger.saveAsBuffer();
+  } catch (err) {
+    console.error('mergeByOrder error:', err);
+    throw err;
+  }
+};
+
+module.exports = { mergePdf, mergeCustomPages, mergeByOrder };

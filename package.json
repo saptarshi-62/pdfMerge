@@ -8,13 +8,15 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
-  
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "express": "^4.19.2",
+    "form-data": "^4.0.5",
     "multer": "^2.0.2",
+    "node-fetch": "^2.7.0",
+    "pdf-lib": "^1.17.1",
     "pdf-merger-js": "^5.1.2"
   }
 }
