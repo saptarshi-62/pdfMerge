@@ -145,6 +145,17 @@
             <small class="form-text text-muted">If provided, this sequence will be used to build the merged PDF and the <code>pages1</code>/<code>pages2</code> inputs will be ignored.</small>
           </div>
 
+          <div class="form-group">
+            <label>Merged PDF total pages: <strong id="merged-pages-count">—</strong></label>
+            <div class="mb-2">
+              <button type="button" id="detect-generate" class="btn btn-detect btn-sm mx-2 my-2"><span class="btn-icon" aria-hidden="true"></span> Detect &amp; Generate</button>
+              <button type="button" id="apply-generated" class="btn btn-primary btn-sm ml-2 "><span class="btn-icon" aria-hidden="true"></span> Apply to Order</button>
+              <button type="button" id="reset-generated" class="btn btn-reset btn-sm ml-2 my-2"><span class="btn-icon" aria-hidden="true">↺</span> Reset</button>
+            </div>
+            <div id="merged-position-selectors" class="mt-2" style="display:none; max-height:320px; overflow:auto;"></div>
+            <small class="form-text text-muted">After uploading PDFs, click <strong>Detect &amp; Generate</strong> (or the detection will run automatically on file upload). Use the dropdowns to select which source page (pdfN:page) goes into each merged position.</small>
+          </div>
+
           <button type="submit" class="btn btn-primary mt-3">
             Merge Selected Pages
           </button>
@@ -172,5 +183,7 @@
 
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+  <script>if (window.pdfjsLib) { window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js'; }</script>
   <script src="/script.js"></script>
 </html>

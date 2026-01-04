@@ -53,6 +53,29 @@ form h1 {
   border-radius: 50px;
 }
 
+/* Enhanced small buttons for detect/reset/apply */
+.btn-icon { margin-right: 8px; display: inline-block; transform: translateY(-1px); }
+
+.btn-detect {
+  background: linear-gradient(90deg,#17a2b8,#138496);
+  color: #fff;
+  border: none;
+  box-shadow: 0 6px 14px rgba(19,132,150,0.18);
+}
+.btn-detect:hover { filter: brightness(0.94); transform: translateY(-1px); }
+.btn-detect:active { transform: translateY(0); }
+
+.btn-reset {
+  background: rgba(220,53,69,0.03);
+  color: #dc3545;
+  border: 1px solid rgba(220,53,69,0.12);
+  box-shadow: none;
+}
+.btn-reset:hover { background: rgba(220,53,69,0.06); border-color: rgba(220,53,69,0.28); }
+
+.btn-sm { padding: 6px 10px; border-radius: 8px; }
+
+
 .footer {
   background: #f8f9fa;
   color: #555;
